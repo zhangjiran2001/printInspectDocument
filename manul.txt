@@ -1,0 +1,120 @@
+/********** lp命令 格式***********************************************/
+lp -E -U zhangjiran -d HP_DeskJet_2700_series -t tiltleaaa -c -m -H hold 3
+
+/********** 编译过程的手顺 Bengin***********************************************/
+./configure  --enable-debug  --enable-debug-printfs
+vim Makedefs 
+更改编译选项OPTIONS：追加-O0 取消编译优化，追加-DDEBUG
+查看库名LIBGSSAPI，这个在乌班图版本里有问题
+更改生成库的路径libdir为下面路径，将来需要更改configure文件
+/usr/lib/x86_64-linux-gnu
+
+cups-2.3.6/scheduler$ vim Makefile
+在CUPSDOBJS = 中加入WebServerConnect.o 注意这个要在job.o之前
+
+
+make
+make check
+sudo make install
+sudo cupsctl --debug-logging
+
+sudo /etc/init.d/cups stop
+sudo /etc/init.d/cups reload
+sudo /etc/init.d/cups start
+
+软件打包，参考代码列表文件打包
+cat strlist.txt | xargs tar -zcvf xxx.tar.gz
+
+/********** 编译过程的手顺 end***********************************************/
+
+/***********一些知识***********************************/
+ldd 查看动态链接库
+ldd -u demo 查看不需要链接的so
+编译时 gcc 使用 -Wl,--as-needed 编译选项可以不连接不需要的库
+
+cups的配置文件
+./etc/cups/cupsd.conf
+可以在网页管理员界面更改
+
+编译完cups的库放在这里
+./usr/lib64/libcups.so
+
+打印机作业的配置文件在job.h的宏里面
+
+打印机打印的数据都被服务器放在下面的目录里
+/var/spool/cups
+
+终端输入下面命令可以关闭笔记本触摸面板
+synclient touchpadoff=1
+/***********一些知识 end***********************************/
+
+/*********************如何输出log*******************/
+后端的话可以用下面的语句记log
+cupsdLogMessage(CUPSD_LOG_INFO, "Expiring subscriptions...");
+cupsdLogMessage(CUPSD_LOG_WARN,
+                      "Possible DoS attack - more than %d clients connecting "
+                      "from %s.",
+                      MaxClientsPerHost,
+                      httpGetHostname(con->http, name, sizeof(name)));
+
+log讲被写入/var/log/cups/error_log
+
+控制台的话下面这种log的写法可以直接输出，前提是控制太终端得打开，并操作
+_cupsLangPrintf(stderr, _("ZHANGJIRAN LOG:cupsRemoveOption job-hold-until num_options=%d"),num_options);
+
+前端的话可以用下面语句记log
+DEBUG_printf(("ZHANGJIRAN LOG:_cupsConnect cg->http=%p",cg->http));
+DEBUG_puts("ZHANGJIRAN LOG:_1cupsWriteRequestData: Returning HTTP_STATUS_CONTINUE.");
+
+这种log会被写入你自己指定的环境变量里的路径，所以使用前要设定下面三个环境变量
+如果需要调试全体环境，环境变量应该修改下面配置文件
+vim /etc/profile
+export CUPS_DEBUG_LOG=/home/since/cups.log
+export CUPS_DEBUG_LEVEL=9
+export CUPS_DEBUG_FILTER='ZHANGJIRAN'//这个是过滤关键字用的，必须填
+touch /home/since/cups.log
+如果只是调试自己的用户的终端环境 比如调试lp命令，改自己的环境变量就行
+vim /home/since/.bashrc
+export CUPS_DEBUG_LOG=/home/since/cups.log
+export CUPS_DEBUG_LEVEL=9
+export CUPS_DEBUG_FILTER=0
+touch /home/since/cups.log
+
+共享打印地址设置
+vim /etc/profile
+export CUPS_SERVER=http://192.168.1.187:631
+设置挂起时间的环境变量
+export  PRINTER_JOB_HOLD_TIME=xxx（秒数）
+/*********************如何输出log end*******************************************/
+
+/******************安装奔图打印机********************/
+在官方提供的驱动文件中找到 07_兆芯_中科方德SV2 文件夹
+将 pantum_7.2.52-1+1nfs1_amd64.deb 拷贝到本地
+执行 sudo dpkg -i pantum_7.2.52-1+1nfs1_amd64.deb
+/******************安装奔图打印机 end********************/
+./usr/share/cups/ppdc
+./usr/bin/ppdc
+./opt/crossover-depend/usr/lib/cups/daemon/cups-driverd
+./usr/lib/cups/daemon/cups-driverd
+
+cupsdSetJobHoldUntil
+add_job
+hold_job
+restart_job
+cupsdLoadJob
+set_job_attrs
+
+/******************安装wireshark******************/
+先在应用商店下载
+然后执行下面命令
+sudo dpkg-reconfigure wireshark-common
+选yes
+然后cd /user/bin
+sudo chmod 755 dumpcap
+/******************安装wireshark******************/
+
+
+
+
+
+

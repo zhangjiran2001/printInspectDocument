@@ -1,0 +1,11 @@
+打印机启动过程猜想
+
+1打开配置文件
+T001 02:30:37.668  ZHANGJIRAN LOG:cupsFileOpen(filename="/etc/cups/client.conf", mode="r")
+T001 02:30:37.668  ZHANGJIRAN LOG:cupsFileOpen(filename="/home/since/.cups/client.conf", mode="r")
+T001 02:30:40.624  ZHANGJIRAN LOG:_cupsConnect cg->http=(nil)
+T001 02:30:40.624  ZHANGJIRAN LOG:cupsFileOpen(filename="/etc/cups/lpoptions", mode="r")
+T001 02:30:40.624  ZHANGJIRAN LOG:cupsFileOpen(filename="/home/since/.cups/lpoptions", mode="r")
+2 收集配置信息
+cupsParseOptions
+

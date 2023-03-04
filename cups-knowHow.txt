@@ -1,0 +1,19 @@
+创建打印作业过程
+
+1 连上http服务器
+ http = _cupsConnect()
+2 创建request
+request = ippNewRequest(IPP_OP_CREATE_JOB)
+创建ippRequest就是先创建一个_ipp_s的结构体。
+3 设置ipp版本
+ippSetVersion(request, info->version / 10, info->version % 10);
+4 添加ipp的字符串
+ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_NAME, "requesting-user-name",NULL, cupsUser());
+5 添加ipp属性
+cupsEncodeOptions2(request, num_options, options, IPP_TAG_OPERATION);
+6 发送request 返回response
+response = cupsDoRequest(http, request, info->resource);
+7 在response中获取jobid
+ippFindAttribute(response, "job-id", IPP_TAG_INTEGER)；
+8 删除response
+ippDelete(response);

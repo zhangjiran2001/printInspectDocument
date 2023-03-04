@@ -1,0 +1,69 @@
+1  下载cup源代码
+    下载网址：http://www.cups.org/
+    下载文件：cups-2.3.6.tar.gz（版本为2.3.6）
+    将文件存放在自己任意的工作文件夹，解包。
+    例如：/home/since/CUPS/ tar -zxvf cups-2.3.6.tar.gz
+
+2  用本次开发的代码替换更新cup源代码
+   将本次开发的服务器端代码包存放在cups源代码包的同级目录里
+   将本次开发的服务器端代码包解包
+   例如：/home/since/CUPS/ tar -zxvf printJugeSystem_202209111924.tar.gz
+
+3  对源代码进行编译
+    编译过程的命令：configure  ---> make ---->sudo make install ----> make deb
+
+   configure:
+        configure脚本功能就是对当前系统做很多的测试，以用来检测出安装平台的目标特征.
+        查找是否已经安装了依存的软件包，有了这些软件包才能正常编译。
+        比如它会检测是不是有CC或GCC，它是个shell脚本，是autoconf的工具的基本应用，
+        它会产生Makefiles。
+
+        下面是cups依存的所有软件包（可以用下面的命令进行安装）：
+         sudo apt-get install autoconf build-essential libavahi-client-dev \
+         libgnutls28-dev libkrb5-dev libnss-mdns libpam-dev \
+         libsystemd-dev libusb-1.0-0-dev zlib1g-dev
+        当然上面的软件包系统已经安装过了，但是不是安装在默认的目录上，
+        那么configure也有可能检测不到，这就需要更改库的路径libdir。
+        我们可以事前通过ldd( 查看动态链接库命令)看看系统自带cups的库依存关系,
+        然后修改libdir的内容。
+        cups官方提供的做法(供参考)：
+           setenv CFLAGS "-I/some/directory"
+           setenv CPPFLAGS "-I/some/directory"
+           setenv CXXFLAGS "-I/some/directory"
+           setenv DSOFLAGS "-L/some/directory"
+           setenv LDFLAGS "-L/some/directory"
+           ./configure ...
+
+      make:
+         编译，如果没有报错，会按照Makefile的要求生成.o文件和可执行文件
+     
+     sudo make install：
+         将编译后的可执行文件放入系统的文件夹   /etc /usr /var
+         虽然可执行文件被更新了，但是不会自动启动cupsd服务
+         需要用下面命令手动执行。
+         sudo /etc/init.d/cups stop
+         sudo /etc/init.d/cups reload
+         sudo /etc/init.d/cups start
+   
+     make deb:
+        生成软件安装包。生成文件在cups-2.3.6/dist目录。
+        cups生成4个安装包(它们被压缩在一个文件里)
+        4个安装包中，
+        一个是cups安装包，里面是cups服务程序
+       一个是cups环境包，里面是帮助文档，头文件
+        一个是cups生成的库包，里面是cups的动态链接库
+        一个是cups的lpd程序包，里面只有一个cups-lpd。
+        查看软件包的内容，可以用dpkg -X  包文件 输出文件夹名
+        和dpkg -e 包文件 将包打开
+
+        注意事项：
+        为了执行make命令能够生成deb安装包，需要事前安装epm
+        epm是一个免费开源的软件包制作工具。cups只能用它来打包。
+        epm的下载和安装（https://www.msweet.org/epm/）
+        cups将自己打包的信息都放在cups-2.3.6/packaging/文件夹中
+        在执行configure命令时，会自动生成epm打包需要的list文件(cups.list)
+        
+        
+
+
+    

@@ -1,0 +1,98 @@
+add_job     Add a job to a print queue.
+
+static cupsd_job_t *			                        /* O - Job object */
+add_job(cupsd_client_t  *con,		        /* I - Client connection */
+	cupsd_printer_t *printer,	                    /* I - Destination printer */
+	mime_type_t     *filetype)                     /* I - First print file type, if any */
+
+{
+
+_cups_strcasecmp 字符串比较，0是相等，
+
+1518行之前还是检出各种属性的正确性，1518行之后开始正式创建job
+1574行正式创建job结构，申请了内存。
+
+1897行可以参考如何中断一个job
+
+
+
+}
+
+doc_name = ippFindAttribute(con->request, "document-name", IPP_TAG_NAME);
+char* src = doc_name->values[0].string.text;
+format = ippFindAttribute(con->request, "document-format",IPP_TAG_MIMETYPE);
+char* src = format->values[0].string.text;
+
+属性在get_options函数里面比较丰富
+
+size = ippFindAttribute(con->request, "PageSize", IPP_TAG_ZERO);
+char* src = size->values[0].string.text;
+
+
+attr = ippFindAttribute(con->request, "copies",IPP_TAG_INTEGER);
+int copy_num = attr->values[0].integer;
+
+attr = ippFindAttribute(job->attrs, "sides", IPP_TAG_KEYWORD);
+char* src = attr->values[0].string.text;
+one-sided，two-sided-long-edge，two-sided-short-edge
+
+attr = ippFindAttribute(job->attrs, "print-color-mode",IPP_TAG_KEYWORD);
+char* src = attr->values[0].string.text;
+monochrome 、 auto，color
+ippFindAttribute(job->attrs, "print-color-mode", IPP_TAG_ZERO)
+
+job-pages-completed
+job-impressions
+job-media-sheets 
+
+job->impressions
+job->sheets
+job->job_sheets
+
+struct cupsd_client_s
+{
+  int			number;								/* Connection number */
+  http_t		*http;		    						/* HTTP client connection */
+  ipp_t			*request,							/* IPP request information */
+			        *response;							/* IPP response information */
+  cupsd_location_t	*best;					/* Best match for AAA */
+  struct timeval	start;							/* Request start time */
+  http_state_t		operation;				/* Request operation */
+  off_t			bytes;									/* Bytes transferred for this request */
+  int			is_browser;							/* Is the client a web browser? */
+  int			type;										/* AuthType for username */
+  char	username[HTTP_MAX_VALUE],
+																/* Username from Authorization: line */
+			password[HTTP_MAX_VALUE],
+																/* Password from Authorization: line */
+			uri[HTTP_MAX_URI],
+																/* Localized URL/URI for GET/PUT */
+			*filename,									/* Filename of output file */
+			*command,								/* Command to run */
+			*options,									/* Options for command */
+			*query_string;							/* QUERY_STRING environment variable */
+  int			file;											/* Input/output file */
+  int			file_ready;								/* Input ready on file/pipe? */
+  int			pipe_pid;								/* Pipe process ID (or 0 if not a pipe) */
+  http_status_t		pipe_status;			/* HTTP status from pipe process */
+  int			sent_header,						/* Non-zero if sent HTTP header */
+			got_fields,									/* Non-zero if all fields seen */
+			header_used;							/* Number of header bytes used */
+  char			header[2048];					/* Header from CGI program */
+  cups_lang_t		*language;			/* Language to use */
+#ifdef HAVE_SSL
+  int			auto_ssl;								/* Automatic test for SSL/TLS */
+#endif /* HAVE_SSL */
+  http_addr_t		clientaddr;			/* Client's server address */
+  char			clientname[256];				/* Client's server name for connection */
+  int			clientport;								/* Client's server port for connection */
+  char			servername[256];			/* Server name for connection */
+  int			serverport;							/* Server port for connection */
+#ifdef HAVE_GSSAPI
+  int			have_gss;								/* Have GSS credentials? */
+  uid_t			gss_uid;								/* User ID for local prints */
+#endif /* HAVE_GSSAPI */
+#ifdef HAVE_AUTHORIZATION_H
+  AuthorizationRef	authref;				/* Authorization ref */
+#endif /* HAVE_AUTHORIZATION_H */
+};
