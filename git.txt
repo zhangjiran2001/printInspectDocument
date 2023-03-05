@@ -1,0 +1,74 @@
+1 首先在github(https://github.com/)上注册一个账户（zhangjiran2001@163.com）
+2 在本地电脑安装git ，unbantu使用 #sudo apt-get install git 命令
+3 git的配置可以通过git config 进行查询和配置。
+本机设置
+git config --global user.name zhangjiran2001
+git config --global user.email zhangjiran2001@163.com
+
+  //-----------------
+  在没有初始化任何一个仓库之前，没有git的配置文件。
+  配置文件分为三个级别，系统、全局，仓库。
+  配置系统用户名：#sudo git config --system user.name zhangjiran2001   优先级低 
+  配置全局用户名：#sudo git config --global user.name zhangjiran2001    优先级中
+  配置仓库用户名：#sudo git config --local user.name zhangjiran2001      优先级高
+  删除命令  ：#sudo git config --unset --system user.name 
+  //-----------------
+
+4 克隆远程仓库到本地
+三种链接方式 HTTPS / SSH / GitHub CLI
+
+克隆命令
+git clone HTTPS或者SSH链接  指定文件夹（可选）
+
+5 git添加文件并提交到本地
+查看当前仓库状态  git status
+git add 添加到暂存区
+git commit -m "变更履历" 添加到本地仓库
+
+
+6 push到远程仓库
+  git remote -v 查看远程仓库url
+  git remote set-url  origin(别名) https://github.com/xxx.git  给url设置一个别名
+  git remote remove origin(别名)   --删除别名
+
+  git push 远程主机名  本地分支名：远程分支名
+  实际中远程主机名太长，一般用别名代替
+  git push origin main:main
+  本地分支名如何和远程分支名相同的话也可以省略
+  git push origin main
+
+ 在github网站上获取token
+ 然后使用下面命令
+ git remote set-url  origin https://<token>@github.com/xxx.git
+
+
+---本地常用操作---
+git 撤销修改
+  工作区修改撤销 git restore <文件名>
+                               git  checkout  --<文件名>
+
+  暂存区修改撤销 git restore --staged  <文件名>  
+  这样可以给文件返回工作区
+  本地仓库修改撤销  git reset --hard  <version>
+  远程仓库修改撤销 先本地仓库修改撤销，然后强制把本地仓库推送到远程仓库 git push -f origin main
+  git clean -f -d  把工作区中没有被管理的文件强制删除
+
+
+git status 查看仓库的状态信息
+git add 或者 git rm 添加工作区的删除到暂存区
+git log 查看历史提交记录
+git reflog 查看所有分支的所有操作记录 可以配合git reset --hard <version> 将版本回退到指定版
+git fetch 只拉取远程分支到本地，并不会进行合并
+git pull 拉取远程分支到本地并进行合并
+
+
+分支管理
+git branch 查看本地分支 -r 远程分支 -a所有分支
+git branch <分支名>  创建分支
+git checkout <分支名>  切换分支
+git checkout -b <分支名>  创建并切换到该分支
+git branch -d <分支名>  删除分支  -D 强制删除分支
+git merge <分支名>  合并指定分支到当前分支
+git push <主机> <本地分支> 可以创建远程分支 相当于把本地创建的分支推送到远程
+git push <主机>  :<远程分支> 可以删除远程分支 相当于把本地的空分支推送到远程 代替之前的远程分支达到删除的目的
+
