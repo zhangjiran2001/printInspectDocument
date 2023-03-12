@@ -57,6 +57,7 @@ git 撤销修改
 git status 查看仓库的状态信息
 git add 或者 git rm 添加工作区的删除到暂存区
 git log 查看历史提交记录
+git log --name-status 查看历史提交记录及文件状态
 git reflog 查看所有分支的所有操作记录 可以配合git reset --hard <version> 将版本回退到指定版
 git fetch 只拉取远程分支到本地，并不会进行合并
 git pull 拉取远程分支到本地并进行合并
