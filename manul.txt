@@ -1,6 +1,10 @@
 /********** lp命令 格式***********************************************/
 lp -E -U zhangjiran -d HP_DeskJet_2700_series -t tiltleaaa -c -m -H hold 3
 
+/********** lpadmin命令 格式***********************************************/
+lpadmin -u allow:@lab1,testuser2 -d 六中心打印机      //白名单，除此之外不能看见打印机 @lab1是组
+lpadmin -u deny:@lab1,testuser2 -d 六中心打印机      //黑名单，除此之外能看见打印机
+
 /********** 编译过程的手顺 Bengin***********************************************/
 ./configure  --enable-debug  --enable-debug-printfs
 vim Makedefs 
