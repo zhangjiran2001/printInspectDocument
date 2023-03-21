@@ -12,10 +12,14 @@ vim Makedefs
 查看库名LIBGSSAPI，这个在乌班图版本里有问题
 更改生成库的路径libdir为下面路径，将来需要更改configure文件
 /usr/lib/x86_64-linux-gnu
+
 更改动态链接库的目的是将动态链接库部署路径放在/usr/lib/x86_64-linux-gnu下面。
 如果不改的话，系统会把动态链接库部署在/usr/lib64下面，导致运行时找不到动态库。
 其实不用改，动态链接库找不到的话可以通过更改/etc/ld.so.conf文件，添加链接库路径来实现。
 更改完ld.so.conf文件后，执行sudo ldconfig 命令就可以让系统在运行时，找到动态链接库。
+
+./configure exec_prefix=/home/since/testDIR --prefix=/home/since/testDIR
+指定编译路径
 
 cups-2.3.6/scheduler$ vim Makefile
 在CUPSDOBJS = 中加入WebServerConnect.o 注意这个要在job.o之前
@@ -29,6 +33,8 @@ sudo cupsctl --debug-logging
 sudo /etc/init.d/cups stop
 sudo /etc/init.d/cups reload
 sudo /etc/init.d/cups start
+
+cups是scheduler/cups.sh 脚本的拷贝，在make install时拷出来
 
 软件打包，参考代码列表文件打包
 cat strlist.txt | xargs tar -zcvf xxx.tar.gz
