@@ -63,6 +63,9 @@ synclient touchpadoff=1
 /***********一些知识 end***********************************/
 
 /*********************如何输出log*******************/
+首先更改cupsd的配置文件cupsd.conf  log等级变成debug 这样cups服务的log就可以输出了
+LogLevel debug
+
 后端的话可以用下面的语句记log
 cupsdLogMessage(CUPSD_LOG_INFO, "Expiring subscriptions...");
 cupsdLogMessage(CUPSD_LOG_WARN,
