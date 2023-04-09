@@ -33,6 +33,8 @@
            setenv DSOFLAGS "-L/some/directory"
            setenv LDFLAGS "-L/some/directory"
            ./configure ...
+       还可以这样指定：（--enable-static --disable-shared 是生成静态库，不生成共享库）
+      LDFLAGS="-L/home/since/testDIR" ./configure -prefix=/home/since/testDIR --exec-prefix=/home/since/testDIR --enable-static --disable-shared
 
       make:
          编译，如果没有报错，会按照Makefile的要求生成.o文件和可执行文件
